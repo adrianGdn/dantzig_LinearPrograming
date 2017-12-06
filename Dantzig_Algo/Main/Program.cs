@@ -63,7 +63,6 @@ namespace Main
                         tabSousContraintes[ligne, colonne] = int.Parse(Console.ReadLine());
                     }
                 }
-                // Voir pour comment gérer l'ajout des sous-contraintes
             }
 
 
