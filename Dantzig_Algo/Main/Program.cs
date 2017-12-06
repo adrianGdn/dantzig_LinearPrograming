@@ -26,30 +26,42 @@ namespace Main
                     valZ += "(" + tabValeurPrincipal[i] + "x" + (i + 1) + ") ";
                 } else valZ +=  "(" + tabValeurPrincipal[i] + "x" + (i +1) + ") + ";
             }
-            // Affichage de Z et saut de ligne
-            Console.WriteLine("");
-            Console.WriteLine(valZ);
-            Console.WriteLine("");
+            // Affichage de Z et sauts de lignes
+            Console.WriteLine("\n\n" + valZ+ "\n\n");
 
             Console.WriteLine("Nombre de variables d'écarts :");
             int nbValEcart = int.Parse(Console.ReadLine());
-            int[] tabValeurEcart = new int[nbValEcart];
-            ////////////////////// On récup valeur d'écarts //////////////////////
-            for (int i = 0; i < nbValEcart; i++)
-            {
-                Console.WriteLine("Multiplicateur de la variable d'écart " + (i + 1) + " :");
-                tabValeurEcart[i] = int.Parse(Console.ReadLine());
-            }
-            Console.WriteLine("");
+            Console.WriteLine("\n");
 
+
+            // Ici on fait "nbValPrincipal+2" car on stocke dans le tableau les variables principales + la variable d'écart + la constante
             int[,] tabSousContraintes = new int[nbValEcart, nbValPrincipal+2];
             ////////////////////// On récup les sous-contraintes //////////////////////
             for (int ligne = 0; ligne < nbValEcart; ligne++)
             {
                 for (int colonne = 0; colonne < nbValPrincipal + 2; colonne++)
                 {
-                    Console.WriteLine("Multiplicateur de la variable principale " + (ligne + 1) + " pour la sous-contrainte " + (colonne + 1) + " :");
-                    tabSousContraintes[ligne, colonne] = int.Parse(Console.ReadLine());
+                    // Permet de changer le texte en fonction de la valeur demandé
+                    if (colonne == (nbValPrincipal + 1))
+                    {
+                        // On stocke la constante en dernière place du tableau
+                        Console.WriteLine("Valeur de la constante pour la sous-contrainte " + (ligne + 1) + " :");
+                        tabSousContraintes[ligne, colonne] = int.Parse(Console.ReadLine());
+                        // On fait un saut de ligne pour améliorer la lecture
+                        Console.WriteLine("\n");
+                    }
+                    else if (colonne == (nbValPrincipal))
+                    {
+                        // On stocke la constante en avant-dernière place du tableau
+                        Console.WriteLine("Multiplicateur de la variable d'écart de la sous-contrainte " + (ligne + 1) + " :");
+                        tabSousContraintes[ligne, colonne] = int.Parse(Console.ReadLine());
+                    }
+                    else
+                    {
+                        // Si ce n'est ni une variable d'écart, ni une constante alors c'est une variable principale et elle est stocké avant les deux autres types
+                        Console.WriteLine("Multiplicateur de la variable principale " + (colonne + 1) + " pour la sous-contrainte " + (ligne + 1) + " :");
+                        tabSousContraintes[ligne, colonne] = int.Parse(Console.ReadLine());
+                    }
                 }
                 // Voir pour comment gérer l'ajout des sous-contraintes
             }
