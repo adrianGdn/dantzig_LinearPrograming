@@ -10,7 +10,7 @@ namespace Main
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Nb valeurs principales :");
+            Console.WriteLine("Nombre de variables principales :");
             int nbValPrincipal = int.Parse(Console.ReadLine());
             int[] tabValeurPrincipal = new int[nbValPrincipal];
             // Pour affichage Z
@@ -18,7 +18,7 @@ namespace Main
             ////////////////////// On récup valeur principales //////////////////////
             for (int i = 0; i < nbValPrincipal; i++)
             {
-                Console.WriteLine("Numéro valeur principale " + (i + 1) + " :");
+                Console.WriteLine("Multiplicateur de la variable principale " + (i + 1) + " :");
                 tabValeurPrincipal[i] = int.Parse(Console.ReadLine());
 
                 if(i+1 == nbValPrincipal) {
@@ -31,20 +31,26 @@ namespace Main
             Console.WriteLine(valZ);
             Console.WriteLine("");
 
-            Console.WriteLine("Nb valeurs d'écarts :");
+            Console.WriteLine("Nombre de variables d'écarts :");
             int nbValEcart = int.Parse(Console.ReadLine());
             int[] tabValeurEcart = new int[nbValEcart];
             ////////////////////// On récup valeur d'écarts //////////////////////
             for (int i = 0; i < nbValEcart; i++)
             {
-                Console.WriteLine("Numéro valeur d'écart " + (i + 1) + " :");
+                Console.WriteLine("Multiplicateur de la variable d'écart " + (i + 1) + " :");
                 tabValeurEcart[i] = int.Parse(Console.ReadLine());
             }
             Console.WriteLine("");
 
+            int[][] tabSousContraintes = new int[nbValPrincipal+2][];
             ////////////////////// On récup les sous-contraintes //////////////////////
-            for (int i = 0; i < nbValEcart; i++)
+            for (int colonne = 0; colonne < nbValEcart; colonne++)
             {
+                for (int ligne = 0; colonne < nbValPrincipal + 2; ligne++)
+                {
+                    Console.WriteLine("Multiplicateur de la variable principale " + (colonne + 1) + " pour la sous-contrainte" + (ligne + 1) + " :");
+                    tabSousContraintes[ligne][colonne] = int.Parse(Console.ReadLine());
+                }
                 // Voir pour comment gérer l'ajout des sous-contraintes
             }
 
