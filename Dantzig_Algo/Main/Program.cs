@@ -44,11 +44,11 @@ namespace Main
 
             int[,] tabSousContraintes = new int[nbValEcart, nbValPrincipal+2];
             ////////////////////// On récup les sous-contraintes //////////////////////
-            for (int colonne = 0; colonne < nbValEcart; colonne++)
+            for (int ligne = 0; ligne < nbValEcart; ligne++)
             {
-                for (int ligne = 0; colonne < nbValPrincipal + 2; ligne++)
+                for (int colonne = 0; colonne < nbValPrincipal + 2; colonne++)
                 {
-                    Console.WriteLine("Multiplicateur de la variable principale " + (colonne + 1) + " pour la sous-contrainte " + (ligne + 1) + " :");
+                    Console.WriteLine("Multiplicateur de la variable principale " + (ligne + 1) + " pour la sous-contrainte " + (colonne + 1) + " :");
                     tabSousContraintes[ligne, colonne] = int.Parse(Console.ReadLine());
                 }
                 // Voir pour comment gérer l'ajout des sous-contraintes
