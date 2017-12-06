@@ -52,9 +52,8 @@ namespace Main
                     }
                     else if (colonne == (nbValPrincipal))
                     {
-                        // On stocke la constante en avant-dernière place du tableau
-                        Console.WriteLine("Multiplicateur de la variable d'écart de la sous-contrainte " + (ligne + 1) + " :");
-                        tabSousContraintes[ligne, colonne] = int.Parse(Console.ReadLine());
+                        // On stocke la variable d'écart en avant-dernière place du tableau qui par défaut pour le premier passage vaut 1
+                        tabSousContraintes[ligne, colonne] = 1;
                     }
                     else
                     {
