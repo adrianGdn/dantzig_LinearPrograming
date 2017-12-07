@@ -33,6 +33,23 @@ namespace Main
             int nbValEcart = int.Parse(Console.ReadLine());
             Console.WriteLine("\n");
 
+            int[] VHB = new int[nbValPrincipal]; //la VHB
+            int[] VDB = new int[nbValEcart] ; // la VDB
+            //on remplis la VDB avec les variables d'écarts
+            int countVDB = 0;
+            for (int o = nbValPrincipal; o < nbValEcart; o++)
+            {
+                VHB[countVDB] = o;
+                countVDB++;
+            }
+
+            //on remplis la VHB avec les variables principales
+            int countVHB = 0;
+            for (int o = 0; o < nbValEcart; o++)
+            {
+                VHB[countVHB] = o;
+                countVHB++;
+            }
 
             // Ici on fait "nbValPrincipal+2" car on stocke dans le tableau les variables principales + la variable d'écart + la constante
             int[,] tabSousContraintes = new int[nbValEcart, nbValPrincipal+2];
@@ -64,9 +81,27 @@ namespace Main
                 }
             }
 
+            //on cherche la valeur entrante
+            int vEntrante = tabValeurPrincipal[0];
+            int numeroVEntrante = 0;
+            for (int i = 0; i < tabValeurPrincipal.Length; i++)
+            {
+                if(tabValeurPrincipal[i] > vEntrante)
+                {
+                    vEntrante = tabValeurPrincipal[i];
+                    numeroVEntrante = i;
+                }
+            }
+            Console.WriteLine("v entrante :" + vEntrante);//virer de la VHB
 
-            // "Pause écran"
-            Console.ReadLine();
+            for (int i = 0; i < tabSousContraintes.Length -2; i++)
+            {
+                // faire v.s
+            }
+
+
+                // "Pause écran"
+                Console.ReadLine();
         }
     }
 }
