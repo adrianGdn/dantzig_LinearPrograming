@@ -12,14 +12,14 @@ namespace Main
         {
             Console.WriteLine("Nombre de variables principales :");
             int nbValPrincipal = int.Parse(Console.ReadLine());
-            int[] tabValeurPrincipal = new int[nbValPrincipal];
+            double[] tabValeurPrincipal = new double[nbValPrincipal];
             // Pour affichage Z
             string valZ = "Z = ";
             ////////////////////// On récup valeur principales //////////////////////
             for (int i = 0; i < nbValPrincipal; i++)
             {
                 Console.WriteLine("Multiplicateur de la variable principale " + (i + 1) + " :");
-                tabValeurPrincipal[i] = int.Parse(Console.ReadLine());
+                tabValeurPrincipal[i] = double.Parse(Console.ReadLine());
 
                 if(i+1 == nbValPrincipal) {
                     // Permet d'afficher correctement Z
@@ -33,8 +33,8 @@ namespace Main
             int nbValEcart = int.Parse(Console.ReadLine());
             Console.WriteLine("\n");
 
-            int[] VHB = new int[nbValPrincipal]; //la VHB
-            int[] VDB = new int[nbValEcart] ; // la VDB
+            double[] VHB = new double[nbValPrincipal]; //la VHB
+            double[] VDB = new double[nbValEcart] ; // la VDB
             //on remplis la VDB avec les variables d'écarts
             int countVDB = 0;
             for (int o = nbValPrincipal; o < nbValEcart; o++)
@@ -52,7 +52,7 @@ namespace Main
             }
 
             // Ici on fait "nbValPrincipal+2" car on stocke dans le tableau les variables principales + la variable d'écart + la constante
-            int[,] tabSousContraintes = new int[nbValEcart, nbValPrincipal+2];
+            double[,] tabSousContraintes = new double[nbValEcart, nbValPrincipal+2];
             ////////////////////// On récup les sous-contraintes //////////////////////
             for (int ligne = 0; ligne < nbValEcart; ligne++)
             {
@@ -63,7 +63,7 @@ namespace Main
                     {
                         // On stocke la constante en dernière place du tableau
                         Console.WriteLine("Valeur de la constante pour la sous-contrainte " + (ligne + 1) + " :");
-                        tabSousContraintes[ligne, colonne] = int.Parse(Console.ReadLine());
+                        tabSousContraintes[ligne, colonne] = double.Parse(Console.ReadLine());
                         // On fait un saut de ligne pour améliorer la lecture
                         Console.WriteLine("\n");
                     }
@@ -76,7 +76,7 @@ namespace Main
                     {
                         // Si ce n'est ni une variable d'écart, ni une constante alors c'est une variable principale et elle est stocké avant les deux autres types
                         Console.WriteLine("Multiplicateur de la variable principale " + (colonne + 1) + " pour la sous-contrainte " + (ligne + 1) + " :");
-                        tabSousContraintes[ligne, colonne] = int.Parse(Console.ReadLine());
+                        tabSousContraintes[ligne, colonne] = double.Parse(Console.ReadLine());
                     }
                 }
             }
@@ -85,7 +85,7 @@ namespace Main
             //condition d'arrét : avoir tout les coefs négatifs
 
             //on cherche la valeur entrante
-            int vEntrante = 0;
+            double vEntrante = 0;
             int numeroVEntrante = 0;
             for (int i = 0; i < tabValeurPrincipal.Length; i++)
             {
@@ -112,6 +112,8 @@ namespace Main
                 // MAJ de la vs avec la VDB
             }
             Console.WriteLine("valeur de variable sortante : "+ variableSortante);
+
+
 
                 // "Pause écran"
                 Console.ReadLine();
