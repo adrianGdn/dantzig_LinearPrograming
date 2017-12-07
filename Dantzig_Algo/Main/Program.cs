@@ -45,7 +45,7 @@ namespace Main
 
             //on remplis la VHB avec les variables principales
             int countVHB = 0;
-            for (int o = 0; o < nbValEcart; o++)
+            for (int o = 0; o < nbValPrincipal; o++)
             {
                 VHB[countVHB] = o;
                 countVHB++;
@@ -81,8 +81,11 @@ namespace Main
                 }
             }
 
+            //début du while (a faire)
+            //condition d'arrét : avoir tout les coefs négatifs
+
             //on cherche la valeur entrante
-            int vEntrante = tabValeurPrincipal[0];
+            int vEntrante = 0;
             int numeroVEntrante = 0;
             for (int i = 0; i < tabValeurPrincipal.Length; i++)
             {
@@ -92,13 +95,23 @@ namespace Main
                     numeroVEntrante = i;
                 }
             }
-            Console.WriteLine("v entrante :" + vEntrante);//virer de la VHB
+            Console.WriteLine("valeur de variable entrante :" + vEntrante + ", numéro v entrante : "+ numeroVEntrante);//virer de la VHB
 
-            for (int i = 0; i < tabSousContraintes.Length -2; i++)
+            double variableSortante = tabSousContraintes[0, nbValPrincipal + 1] / tabSousContraintes[0, numeroVEntrante];
+            int numeroEquationSelectionne = 0;
+            for (int i = 0; i < tabSousContraintes.GetUpperBound(0)+1; i++)
             {
-                // faire v.s
+                //on calcule ratio
+                double ratio = tabSousContraintes[i,nbValPrincipal + 1] / tabSousContraintes[i, numeroVEntrante];
+                if(ratio < variableSortante && ratio >0)
+                {
+                    variableSortante = ratio;
+                    numeroEquationSelectionne = i;
+                }
+                numeroEquationSelectionne++;
+                // MAJ de la vs avec la VDB
             }
-
+            Console.WriteLine("valeur de variable sortante : "+ variableSortante);
 
                 // "Pause écran"
                 Console.ReadLine();
