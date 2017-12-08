@@ -37,17 +37,17 @@ namespace Main
             double[] VDB = new double[nbValEcart] ; // la VDB
             //on remplis la VDB avec les variables d'écarts
             int countVDB = 0;
-            for (int o = nbValPrincipal; o < nbValEcart; o++)
+            for (int i = nbValPrincipal; i < nbValEcart; i++)
             {
-                VHB[countVDB] = o;
+                VHB[countVDB] = i;
                 countVDB++;
             }
 
             //on remplis la VHB avec les variables principales
             int countVHB = 0;
-            for (int o = 0; o < nbValPrincipal; o++)
+            for (int i = 0; i < nbValPrincipal; i++)
             {
-                VHB[countVHB] = o;
+                VHB[countVHB] = i;
                 countVHB++;
             }
 
@@ -95,7 +95,8 @@ namespace Main
                     numeroVEntrante = i;
                 }
             }
-            Console.WriteLine("valeur de variable entrante :" + vEntrante + ", numéro v entrante : "+ numeroVEntrante);//virer de la VHB
+            Console.WriteLine("valeur de variable entrante :" + vEntrante + ", numéro v entrante : "+ numeroVEntrante);
+            // ToDo : virer de la VHB ?
 
             double variableSortante = tabSousContraintes[0, nbValPrincipal + 1] / tabSousContraintes[0, numeroVEntrante];
             int numeroEquationSelectionne = 0;
@@ -108,15 +109,31 @@ namespace Main
                     variableSortante = ratio;
                     numeroEquationSelectionne = i;
                 }
-                numeroEquationSelectionne++;
-                // MAJ de la vs avec la VDB
+                // ToDo : MAJ de la vs avec la VDB ?
             }
-            Console.WriteLine("valeur de variable sortante : "+ variableSortante);
+            Console.WriteLine("valeur de variable sortante : "+ variableSortante+ " num equation selectionnée : "+ numeroEquationSelectionne);
+
+            //création de l'équation d'échange
+            double[] equationEchange = new double[nbValPrincipal+2];
+            List<double> equaEchange = new List<double>();
+            equationEchange[0] = numeroVEntrante;
+            for (int i = 0; i < nbValPrincipal +2; i++)
+            {
+                //bug sur l'équation, certains éléments devraient étre négatif
+                equationEchange[i] = tabSousContraintes[numeroEquationSelectionne, i] / vEntrante;
+            }
+            afficheSimple(equationEchange);
+            // "Pause écran"
+            Console.ReadLine();
+        }
 
 
-
-                // "Pause écran"
-                Console.ReadLine();
+        static void afficheSimple(double[] tab)
+        {
+            for (int i = 0; i < tab.Length; i++)
+            {
+                Console.WriteLine("élément : " + i + " , " + tab[i]);
+            }
         }
     }
 }
