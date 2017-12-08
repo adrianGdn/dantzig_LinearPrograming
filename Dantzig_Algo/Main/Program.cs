@@ -118,43 +118,55 @@ namespace Main
 
             for (int i = 1; i < nbValPrincipal +2; i++)
             {
-                //possibilité d'avoir des bugs avec des valuers négatives
+                //possibilité d'avoir des bugs avec des valeurs négatives
                if(i == 1 || i < nbValPrincipal + 1)
                 {
                     equationEchange[i] = -(tabSousContraintes[numeroEquationSelectionne, i] / tabSousContraintes[numeroEquationSelectionne, 0]);
                 }
                 else
-                { //la constante ne doit pas passer en négatif (normalement)
+                { //on ne soustrait pas la constante
                     equationEchange[i] = tabSousContraintes[numeroEquationSelectionne, i] / tabSousContraintes[numeroEquationSelectionne, 0];
                 }
                 
             }
             afficheSimple(equationEchange, "tableau sous contraintes");
+            
 
             //calcul des nouvelles sous-contraintes
-            double[] sousContraintesTempo = new double[nbValPrincipal + 2];
-            double[] sousContraintesTempoVariable = new double[nbValPrincipal + 2];
-            for (int i = 0; i < tabSousContraintes.GetUpperBound(0) ; i++)
+            double[] sousContraintesTempo = new double[nbValPrincipal + 2]; // les sous contraintes sont stockés pour simplifications
+            for (int ligne = 0; ligne < tabSousContraintes.GetUpperBound(0) ; ligne++)
             {
                 //on ne traite pas cette équation, elle est déja faite
-                if(i != numeroEquationSelectionne)
+                if(ligne != numeroEquationSelectionne)
                 {
-                    int compteurDecalageContraintes = 1;
-                    for (int index = 0; index < nbValPrincipal + 2; index++)
+                    int compteurDecalageContraintes = 0;
+                    for (int colonne = 0; colonne < nbValEcart + 1; colonne++)
                     {
                         //on récupére les variable d'une équation dans un tableau
-                        sousContraintesTempo[index] = tabSousContraintes[i, index];
+                        sousContraintesTempo[colonne] = tabSousContraintes[ligne, colonne];
                         compteurDecalageContraintes++;
                         //si on remplis la conditons, on a l'ensemble d'une sous contraintes, donc le traitement peut commencer
-                        if(compteurDecalageContraintes == nbValPrincipal + 2)
+                        if(compteurDecalageContraintes == nbValEcart + 1)
                         {
-                            for (int e = 0; e < nbValPrincipal + 1; e++)
+                            for (int index = 1; index < nbValEcart + 1; index++)
                             {
-                                double variT = sousContraintesTempo[numeroVEntrante] * equationEchange[e];
-                                Console.WriteLine(variT);
+                                double resultat = sousContraintesTempo[numeroVEntrante] * equationEchange[index];//ok
+                                //cas de la constante
+                                if(index == nbValEcart)
+                                {
+                                    resultat = sousContraintesTempo[index] - resultat ;
+                                }
+                                else
+                                {
+                                    if(index != nbValEcart - 1)
+                                    {
+                                        resultat = resultat + sousContraintesTempo[index];
+                                    }
+                                }
+                                Console.WriteLine("resultat equation n° "+ ligne + " , "+resultat);
                             }
-
-                            //remettre a zéro sousContraintesTempo
+                            compteurDecalageContraintes = 0; // on remet à zéro le compteur pour les contraintes
+                            //remettre a zéro sousContraintesTempo ?
                         }
                     }
                 }
@@ -170,10 +182,12 @@ namespace Main
 
         static void afficheSimple(double[] tab, string info)
         {
+            Console.WriteLine("\n");
             for (int i = 0; i < tab.Length; i++)
             {
                 Console.WriteLine(info+ " , élément : " + i + " , " + tab[i]);
             }
+            Console.WriteLine("\n");
         }
     }
 }
