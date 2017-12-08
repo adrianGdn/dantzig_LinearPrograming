@@ -145,10 +145,10 @@ namespace Main
                         //on récupére les variable d'une équation dans un tableau
                         sousContraintesTempo[colonne] = tabSousContraintes[ligne, colonne];
                         compteurDecalageContraintes++;
-                        //si on remplis la conditons, on a l'ensemble d'une sous contraintes, donc le traitement peut commencer
+                        //si on remplis la conditons, on a l'ensemble d'une des sous contraintes, donc le traitement peut commencer
                         if(compteurDecalageContraintes == nbValEcart + 1)
                         {
-                            for (int index = 1; index < nbValEcart + 1; index++)
+                            for (int index = 1; index < nbValEcart + 2; index++)
                             {
                                 double resultat = sousContraintesTempo[numeroVEntrante] * equationEchange[index];//ok
                                 //cas de la constante
@@ -158,11 +158,13 @@ namespace Main
                                 }
                                 else
                                 {
+                                    //on ne veut pas faire de calcul avec la nouvelle variable
                                     if(index != nbValEcart - 1)
                                     {
                                         resultat = resultat + sousContraintesTempo[index];
                                     }
                                 }
+                                tabSousContraintes[ligne, index -1] = resultat;
                                 Console.WriteLine("resultat equation n° "+ ligne + " , "+resultat);
                             }
                             compteurDecalageContraintes = 0; // on remet à zéro le compteur pour les contraintes
