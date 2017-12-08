@@ -81,31 +81,38 @@ namespace Main
                 }
             }
 
+            ////////////////////// On calcul la variable entrante //////////////////////
             // Début du while (a faire)
             // Condition d'arrêt : avoir tout les coefs négatifs
 
             // On cherche la valeur entrante
-            double vEntrante = 0;
-            int numeroVEntrante = 0;
+            double variableEntrante = 0;
+            // La variable "numeroVariableEntrante" permet d'obtenir le numéro associé à la variable, ex : x1
+            int numeroVariableEntrante = 0;
             for (int i = 0; i < tabValeurPrincipal.Length; i++)
             {
-                if(tabValeurPrincipal[i] > vEntrante)
+                if(tabValeurPrincipal[i] > variableEntrante)
                 {
-                    vEntrante = tabValeurPrincipal[i];
-                    numeroVEntrante = i;
+                    variableEntrante = tabValeurPrincipal[i];
+                    
+                    numeroVariableEntrante = i;
                 }
             }
-            Console.WriteLine("Valeur de variable entrante : " + vEntrante + ", numéro de la variable entrante : " + numeroVEntrante);
+            // Comme i commence par 0 et non 1, on doit lui ajouter 1
+            Console.WriteLine("Valeur de variable entrante : " + variableEntrante + ", la variable entrante est : x" + (numeroVariableEntrante + 1));
             // ToDo : virer de la VHB ?
 
-            double variableSortante = tabSousContraintes[0, nbValPrincipal + 1] / tabSousContraintes[0, numeroVEntrante];
+            ////////////////////// On calcul la variable sortante //////////////////////
+            double variableSortante = tabSousContraintes[0, nbValPrincipal + 1] / tabSousContraintes[0, numeroVariableEntrante];
             int numeroEquationSelectionne = 0;
             int counterNombreCoefs = 0;
             int counterNombreCoefsNegatif = 0;
             bool stopIteration = false;
+
             for (int i = 0; i < tabSousContraintes.GetUpperBound(0)+1; i++)
             {
-                double coef = tabSousContraintes[i,nbValPrincipal + 1] / tabSousContraintes[i, numeroVEntrante]; //le coef qui permet de savoir si l'on continue
+                // Il s'agit coefficient qui permet de savoir si on continue ou non
+                double coef = tabSousContraintes[i,nbValPrincipal + 1] / tabSousContraintes[i, numeroVariableEntrante];
                 counterNombreCoefs++;
                 if(coef < variableSortante && coef > 0)
                 {
@@ -122,14 +129,17 @@ namespace Main
                 }
                 // ToDo : MAJ de la vs avec la VDB ?
             }
-            Console.WriteLine("Valeur de variable sortante : "+ variableSortante + ", numéro de l'équation selectionnée : "+ numeroEquationSelectionne);
+            // Comme l'index du numéro de l'équation selectionné commence à 0, on doit lui ajouter 1 pour qu'il s'affiche correctement
+            Console.WriteLine("Valeur de variable sortante : " + variableSortante + ", numéro de l'équation selectionnée : " + (numeroEquationSelectionne + 1));
 
-         /*   while(!stopIteration)
-            {  */
+
+            ////////////////////// On calcul les équations d'échanges //////////////////////
+            /*while(!stopIteration)
+            {*/
                 // Création de l'équation d'échange
                 double[] equationEchange = new double[nbValPrincipal + 2];
-                // La variable sortante est au 1e rang du tableau
-                equationEchange[0] = numeroVEntrante;
+                // La variable sortante est au 1er rang du tableau
+                equationEchange[0] = numeroVariableEntrante;
                 for (int i = 1; i < nbValPrincipal + 2; i++)
                 {
                     // On traite le cas où on pourrais avoir des bugs avec des valeurs négatives
@@ -164,9 +174,10 @@ namespace Main
                             // Si on remplit la conditon, on a l'ensemble de l'une des sous-contraintes, donc le traitement peut commencer
                             if (compteurDecalageContraintes == nbValEcart + 1)
                             {
+                            double resultat = 0;
                                 for (int index = 1; index < nbValEcart + 1; index++)
                                 {
-                                    double resultat = sousContraintesTempo[numeroVEntrante] * equationEchange[index];//ok
+                                    resultat = sousContraintesTempo[numeroVariableEntrante] * equationEchange[index];
                                     // Cas de la constante
                                     if (index == nbValEcart)
                                     {
@@ -182,20 +193,20 @@ namespace Main
                                     }
                                     // On met à jour une partie d'une sous contrainte
                                     tabSousContraintes[ligne, index] = resultat;
-                                    Console.WriteLine("Resultat equation n° " + ligne + ", " + resultat);
-                                }
+                                }                                
+                                // Comme la variable "ligne" est déclaré à 0 et non à 1 pour parcourir le tableau, on doit ici lui ajouter 1
+                                Console.WriteLine("Resultat equation n°" + (ligne + 1) + ", " + resultat);
                                 // On remet à zéro le compteur pour les contraintes
                                 compteurDecalageContraintes = 0;
                                 // Remettre a zéro sousContraintesTempo ?
+
+                                // TODO : Recalculer le nouveau Z --> c'est avec lui que tu vas avoir une nouvelle condition d'arrêt
                             }
                         }
                     }
                 }
-
-
-          //  }
-
-
+            //}
+            
 
             // "Pause écran"
             Console.ReadLine();
