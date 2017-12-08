@@ -81,10 +81,10 @@ namespace Main
                 }
             }
 
-            //début du while (a faire)
-            //condition d'arrét : avoir tout les coefs négatifs
+            // Début du while (a faire)
+            // Condition d'arrêt : avoir tout les coefs négatifs
 
-            //on cherche la valeur entrante
+            // On cherche la valeur entrante
             double vEntrante = 0;
             int numeroVEntrante = 0;
             for (int i = 0; i < tabValeurPrincipal.Length; i++)
@@ -95,7 +95,7 @@ namespace Main
                     numeroVEntrante = i;
                 }
             }
-            Console.WriteLine("valeur de variable entrante :" + vEntrante + ", numéro v entrante : "+ numeroVEntrante);
+            Console.WriteLine("Valeur de variable entrante : " + vEntrante + ", numéro de la variable entrante : " + numeroVEntrante);
             // ToDo : virer de la VHB ?
 
             double variableSortante = tabSousContraintes[0, nbValPrincipal + 1] / tabSousContraintes[0, numeroVEntrante];
@@ -122,67 +122,71 @@ namespace Main
                 }
                 // ToDo : MAJ de la vs avec la VDB ?
             }
-            Console.WriteLine("valeur de variable sortante : "+ variableSortante+ " num equation selectionnée : "+ numeroEquationSelectionne);
+            Console.WriteLine("Valeur de variable sortante : "+ variableSortante + ", numéro de l'équation selectionnée : "+ numeroEquationSelectionne);
 
          /*   while(!stopIteration)
             {  */
-                //création de l'équation d'échange
+                // Création de l'équation d'échange
                 double[] equationEchange = new double[nbValPrincipal + 2];
-                equationEchange[0] = numeroVEntrante;//la variable sortante est au 1e rang du tableau
-
+                // La variable sortante est au 1e rang du tableau
+                equationEchange[0] = numeroVEntrante;
                 for (int i = 1; i < nbValPrincipal + 2; i++)
                 {
-                    //possibilité d'avoir des bugs avec des valeurs négatives
+                    // On traite le cas où on pourrais avoir des bugs avec des valeurs négatives
                     if (i == 1 || i < nbValPrincipal + 1)
                     {
                         equationEchange[i] = -(tabSousContraintes[numeroEquationSelectionne, i] / tabSousContraintes[numeroEquationSelectionne, 0]);
                     }
                     else
-                    { //on ne soustrait pas la constante
+                    {
+                        // On ne soustrait pas la constante
                         equationEchange[i] = tabSousContraintes[numeroEquationSelectionne, i] / tabSousContraintes[numeroEquationSelectionne, 0];
                     }
 
                 }
-                afficheSimple(equationEchange, "tableau sous contraintes d'équation d'échange");
+                afficheSimple(equationEchange, "Tableau sous contraintes d'équation d'échange");
 
 
-                //calcul des nouvelles sous-contraintes
-                double[] sousContraintesTempo = new double[nbValPrincipal + 2]; // les sous contraintes sont stockés pour simplifications
+                // Calcul des nouvelles sous-contraintes
+                // Les sous contraintes sont stockés pour simplifications
+                double[] sousContraintesTempo = new double[nbValPrincipal + 2];
                 for (int ligne = 0; ligne < tabSousContraintes.GetUpperBound(0); ligne++)
                 {
-                    //on ne traite pas cette équation, elle est déja faite
+                    // On ne traite pas cette équation car elle est déja résolu
                     if (ligne != numeroEquationSelectionne)
                     {
                         int compteurDecalageContraintes = 0;
                         for (int colonne = 0; colonne < nbValEcart + 1; colonne++)
                         {
-                            //on récupére les variable d'une équation dans un tableau
+                            // On récupère les variable d'une équation dans un tableau
                             sousContraintesTempo[colonne] = tabSousContraintes[ligne, colonne];
                             compteurDecalageContraintes++;
-                            //si on remplis la conditons, on a l'ensemble d'une des sous contraintes, donc le traitement peut commencer
+                            // Si on remplit la conditon, on a l'ensemble de l'une des sous-contraintes, donc le traitement peut commencer
                             if (compteurDecalageContraintes == nbValEcart + 1)
                             {
                                 for (int index = 1; index < nbValEcart + 1; index++)
                                 {
                                     double resultat = sousContraintesTempo[numeroVEntrante] * equationEchange[index];//ok
-                                    //cas de la constante
+                                    // Cas de la constante
                                     if (index == nbValEcart)
                                     {
                                         resultat = sousContraintesTempo[index] - resultat;
                                     }
                                     else
                                     {
-                                        //on ne veut pas faire de calcul avec la nouvelle variable
+                                        // On ne veut pas faire de calcul avec la nouvelle variable
                                         if (index != nbValEcart - 1)
                                         {
                                             resultat = resultat + sousContraintesTempo[index];
                                         }
                                     }
-                                    tabSousContraintes[ligne, index] = resultat; //on met à jour une partie d'une sous contrainte
-                                    Console.WriteLine("resultat equation n° " + ligne + " , " + resultat);
+                                    // On met à jour une partie d'une sous contrainte
+                                    tabSousContraintes[ligne, index] = resultat;
+                                    Console.WriteLine("Resultat equation n° " + ligne + ", " + resultat);
                                 }
-                                compteurDecalageContraintes = 0; // on remet à zéro le compteur pour les contraintes
-                                                                 //remettre a zéro sousContraintesTempo ?
+                                // On remet à zéro le compteur pour les contraintes
+                                compteurDecalageContraintes = 0;
+                                // Remettre a zéro sousContraintesTempo ?
                             }
                         }
                     }
@@ -197,13 +201,13 @@ namespace Main
             Console.ReadLine();
         }
 
-
+        // Est-ce vraiment une fonction qui sert à quelque chose à part rendre l'IHM moins lisible ?
         static void afficheSimple(double[] tab, string info)
         {
             Console.WriteLine("\n");
             for (int i = 0; i < tab.Length; i++)
             {
-                Console.WriteLine(info+ " , élément : " + i + " , " + tab[i]);
+                Console.WriteLine(info + ", élément : " + i + ", " + tab[i]);
             }
             Console.WriteLine("\n");
         }
