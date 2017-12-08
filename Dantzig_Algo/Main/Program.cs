@@ -102,11 +102,10 @@ namespace Main
             int numeroEquationSelectionne = 0;
             for (int i = 0; i < tabSousContraintes.GetUpperBound(0)+1; i++)
             {
-                //on calcule ratio
-                double ratio = tabSousContraintes[i,nbValPrincipal + 1] / tabSousContraintes[i, numeroVEntrante];
-                if(ratio < variableSortante && ratio >0)
+                double coef = tabSousContraintes[i,nbValPrincipal + 1] / tabSousContraintes[i, numeroVEntrante]; //le coef qui permet de savoir si l'on continue
+                if(coef < variableSortante && coef > 0)
                 {
-                    variableSortante = ratio;
+                    variableSortante = coef;
                     numeroEquationSelectionne = i;
                 }
                 // ToDo : MAJ de la vs avec la VDB ?
@@ -115,24 +114,65 @@ namespace Main
 
             //création de l'équation d'échange
             double[] equationEchange = new double[nbValPrincipal+2];
-            List<double> equaEchange = new List<double>();
-            equationEchange[0] = numeroVEntrante;
-            for (int i = 0; i < nbValPrincipal +2; i++)
+            equationEchange[0] = numeroVEntrante;//la variable sortante est au 1e rang du tableau
+
+            for (int i = 1; i < nbValPrincipal +2; i++)
             {
-                //bug sur l'équation, certains éléments devraient étre négatif
-                equationEchange[i] = tabSousContraintes[numeroEquationSelectionne, i] / vEntrante;
+                //possibilité d'avoir des bugs avec des valuers négatives
+               if(i == 1 || i < nbValPrincipal + 1)
+                {
+                    equationEchange[i] = -(tabSousContraintes[numeroEquationSelectionne, i] / tabSousContraintes[numeroEquationSelectionne, 0]);
+                }
+                else
+                { //la constante ne doit pas passer en négatif (normalement)
+                    equationEchange[i] = tabSousContraintes[numeroEquationSelectionne, i] / tabSousContraintes[numeroEquationSelectionne, 0];
+                }
+                
             }
-            afficheSimple(equationEchange);
-            // "Pause écran"
-            Console.ReadLine();
+            afficheSimple(equationEchange, "tableau sous contraintes");
+
+            //calcul des nouvelles sous-contraintes
+            double[] sousContraintesTempo = new double[nbValPrincipal + 2];
+            double[] sousContraintesTempoVariable = new double[nbValPrincipal + 2];
+            for (int i = 0; i < tabSousContraintes.GetUpperBound(0) ; i++)
+            {
+                //on ne traite pas cette équation, elle est déja faite
+                if(i != numeroEquationSelectionne)
+                {
+                    int compteurDecalageContraintes = 1;
+                    for (int index = 0; index < nbValPrincipal + 2; index++)
+                    {
+                        //on récupére les variable d'une équation dans un tableau
+                        sousContraintesTempo[index] = tabSousContraintes[i, index];
+                        compteurDecalageContraintes++;
+                        //si on remplis la conditons, on a l'ensemble d'une sous contraintes, donc le traitement peut commencer
+                        if(compteurDecalageContraintes == nbValPrincipal + 2)
+                        {
+                            for (int e = 0; e < nbValPrincipal + 1; e++)
+                            {
+                                double variT = sousContraintesTempo[numeroVEntrante] * equationEchange[e];
+                                Console.WriteLine(variT);
+                            }
+
+                            //remettre a zéro sousContraintesTempo
+                        }
+                    }
+                }
+            }
+
+
+
+
+                // "Pause écran"
+                Console.ReadLine();
         }
 
 
-        static void afficheSimple(double[] tab)
+        static void afficheSimple(double[] tab, string info)
         {
             for (int i = 0; i < tab.Length; i++)
             {
-                Console.WriteLine("élément : " + i + " , " + tab[i]);
+                Console.WriteLine(info+ " , élément : " + i + " , " + tab[i]);
             }
         }
     }
