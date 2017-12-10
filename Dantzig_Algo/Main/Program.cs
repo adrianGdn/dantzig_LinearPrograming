@@ -227,20 +227,39 @@ namespace Main
                 double resultat = multiplicateurZ * equationEchange[index ];// ok
                 if (index == equationEchange.Length -1)
                 {
-                    tabValeurPrincipal[nbValPrincipal + 1] = resultat;
+                    tabValeurPrincipal[nbValPrincipal] = resultat;
                 }
                 else
                 {
-                    tabValeurPrincipal[index - 1] = resultat;
+                    if(numeroVariableEntrante == 0)
+                    { //faire la condition pour l'addition 
+                        tabValeurPrincipal[index - 1] = resultat + tabValeurPrincipal[index - 1] ;
+                    }
+                    else
+                    {
+                        tabValeurPrincipal[index - 1] = resultat;
+                    }
                 }
             }
-            //mettre à jour le nombre de nbValPrincipal
 
-            //} //fin du while
+            //on calcule le nombre de variable dans le tableau
+            int counterTabValeurPrincipal = 0;
+            for (int index = 0; index < tabValeurPrincipal.Length; index++)
+            {
+                if(tabValeurPrincipal[index] != 0)
+                {
+                    counterTabValeurPrincipal++;
+                }
+            }
+
+            //on met à jour le nombre de nbValPrincipal
+            nbValPrincipal = counterTabValeurPrincipal;
+
+                //} //fin du while
 
 
-            // "Pause écran"
-            Console.ReadLine();
+                // "Pause écran"
+                Console.ReadLine();
         }
 
         // Est-ce vraiment une fonction qui sert à quelque chose à part rendre l'IHM moins lisible ?
