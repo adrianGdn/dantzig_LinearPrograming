@@ -12,7 +12,7 @@ namespace Main
         {
             Console.WriteLine("Nombre de variables principales :");
             int nbValPrincipal = int.Parse(Console.ReadLine());
-            double[] tabValeurPrincipal = new double[nbValPrincipal];
+            double[] tabValeurPrincipal = new double[nbValPrincipal + 2]; // +2 pour avoir de la marge car il va y avoir des rajouts plus tard
             // Pour affichage Z
             string valZ = "Z = ";
             ////////////////////// On récup valeur principales //////////////////////
@@ -89,7 +89,7 @@ namespace Main
             double variableEntrante = 0;
             // La variable "numeroVariableEntrante" permet d'obtenir le numéro associé à la variable, ex : x1
             int numeroVariableEntrante = 0;
-            for (int i = 0; i < tabValeurPrincipal.Length; i++)
+            for (int i = 0; i < nbValPrincipal; i++) // on ne peut pas prendre le length du tableau, il n'est pas toujours valable
             {
                 if(tabValeurPrincipal[i] > variableEntrante)
                 {
@@ -138,6 +138,7 @@ namespace Main
                 ////////////////////// On calcul l'équation d'échange //////////////////////
                 // Création de l'équation d'échange
                 double[] equationEchange = new double[nbValPrincipal + 2];
+                counterIteration++;
                 // La variable sortante est au 1er rang du tableau
                 equationEchange[0] = numeroVariableEntrante;
                 for (int i = 1; i < nbValPrincipal + 2; i++)
@@ -214,21 +215,26 @@ namespace Main
 
             // TODO : Recalculer le nouveau Z --> c'est avec lui que tu vas avoir une nouvelle condition d'arrêt
             // calcul de Z (le maximum) de la fonction
+            double multiplicateurZ = tabValeurPrincipal[numeroVariableEntrante];
             for (int index = 1; index < equationEchange.Length; index++)
             {
                 /*
-                 * pb : le tableau n'est pas prévu pour autant de variable, et sa longeur est utilisé partout... 
+                 * ok, la ca devient foireux. 
+                 * Ce tableau passe généralement de X variable à X +1 au premier passage (et peut encore augmenter plus tard)
+                 * Donc, au tout début il est initalisé avec deux "case" de marge de plus
+                 * C'est pour cela que l'on utilise pas sa taille 
                  */
-                double resultat = tabValeurPrincipal[numeroVariableEntrante] * equationEchange[index];// ok
+                double resultat = multiplicateurZ * equationEchange[index ];// ok
                 if (index == equationEchange.Length -1)
                 {
-                    tabValeurPrincipal[numeroVariableEntrante] = resultat;
+                    tabValeurPrincipal[nbValPrincipal + 1] = resultat;
                 }
                 else
                 {
-
+                    tabValeurPrincipal[index - 1] = resultat;
                 }
             }
+            //mettre à jour le nombre de nbValPrincipal
 
             //} //fin du while
 
@@ -238,7 +244,7 @@ namespace Main
         }
 
         // Est-ce vraiment une fonction qui sert à quelque chose à part rendre l'IHM moins lisible ?
-        //
+        // sert pour le debug
         static void afficheSimple(double[] tab, string info)
         {
             Console.WriteLine("\n");
