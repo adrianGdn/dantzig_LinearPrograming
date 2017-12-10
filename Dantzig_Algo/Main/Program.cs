@@ -108,7 +108,7 @@ namespace Main
             int counterNombreCoefs = 0;
             int counterNombreCoefsNegatif = 0;
             bool stopIteration = false;
-
+            int counterIteration = 0;
             for (int i = 0; i < tabSousContraintes.GetUpperBound(0)+1; i++)
             {
                 // Il s'agit coefficient qui permet de savoir si on continue ou non
@@ -132,10 +132,10 @@ namespace Main
             // Comme l'index du numéro de l'équation selectionné commence à 0, on doit lui ajouter 1 pour qu'il s'affiche correctement
             Console.WriteLine("Valeur de variable sortante : " + variableSortante + ", numéro de l'équation selectionnée : " + (numeroEquationSelectionne + 1));
 
-
-            ////////////////////// On calcul les équations d'échanges //////////////////////
+            
             /*while(!stopIteration)
             {*/
+                ////////////////////// On calcul l'équation d'échange //////////////////////
                 // Création de l'équation d'échange
                 double[] equationEchange = new double[nbValPrincipal + 2];
                 // La variable sortante est au 1er rang du tableau
@@ -200,25 +200,51 @@ namespace Main
                                 compteurDecalageContraintes = 0;
                                 // Remettre a zéro sousContraintesTempo ?
 
-                                // TODO : Recalculer le nouveau Z --> c'est avec lui que tu vas avoir une nouvelle condition d'arrêt
                             }
                         }
                     }
                 }
-            //}
-            
+
+            //mis a jour des sous équations avec l'équation d'échange
+            tabSousContraintes[numeroEquationSelectionne, 0] = 1; //dans ce cas, la variable a toujours la valeur 1
+            for (int colonne = 1; colonne < nbValEcart + 1; colonne++){
+                tabSousContraintes[numeroEquationSelectionne, colonne] = equationEchange[colonne];
+            }
+
+
+            // TODO : Recalculer le nouveau Z --> c'est avec lui que tu vas avoir une nouvelle condition d'arrêt
+            // calcul de Z (le maximum) de la fonction
+            for (int index = 1; index < equationEchange.Length; index++)
+            {
+                /*
+                 * pb : le tableau n'est pas prévu pour autant de variable, et sa longeur est utilisé partout... 
+                 */
+                double resultat = tabValeurPrincipal[numeroVariableEntrante] * equationEchange[index];// ok
+                if (index == equationEchange.Length -1)
+                {
+                    tabValeurPrincipal[numeroVariableEntrante] = resultat;
+                }
+                else
+                {
+
+                }
+            }
+
+            //} //fin du while
+
 
             // "Pause écran"
             Console.ReadLine();
         }
 
         // Est-ce vraiment une fonction qui sert à quelque chose à part rendre l'IHM moins lisible ?
+        //
         static void afficheSimple(double[] tab, string info)
         {
             Console.WriteLine("\n");
             for (int i = 0; i < tab.Length; i++)
             {
-                Console.WriteLine(info + ", élément : " + i + ", " + tab[i]);
+                Console.WriteLine("debug "+info + ", élément : " + i + ", " + tab[i]);
             }
             Console.WriteLine("\n");
         }
