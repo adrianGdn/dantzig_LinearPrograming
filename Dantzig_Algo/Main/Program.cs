@@ -146,7 +146,7 @@ namespace Main
                     }
                     
                     counterNombreCoefs++;
-                    if(coef < variableSortante && coef > 0)
+                    if(coef > variableSortante && coef > 0)
                     {
                         variableSortante = coef;
                         numeroEquationSelectionne = i;
