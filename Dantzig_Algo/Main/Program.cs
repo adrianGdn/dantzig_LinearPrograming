@@ -156,7 +156,7 @@ namespace Main
                 }
                 // Comme l'index du numéro de l'équation selectionné commence à 0, on doit lui ajouter 1 pour qu'il s'affiche correctement
                 Console.WriteLine("Valeur de variable sortante : " + variableSortante + ", numéro de l'équation selectionnée : " + (numeroEquationSelectionne + 1));
-                retourChariot();
+                //retourChariot();
 
                 ////////////////////// On calcul l'équation d'échange //////////////////////
                 // Création de l'équation d'échange
@@ -199,7 +199,7 @@ namespace Main
                     }
                 }
 
-                //afficheSimple(equationEchange, "Tableau sous contraintes d'équation d'échange");
+                afficheEquationEchange(equationEchange, numeroVariableEntrante);
 
 
                 // Calcul des nouvelles sous-contraintes
@@ -240,8 +240,8 @@ namespace Main
                                     tabSousContraintes[ligne, index] = resultat;
                                 }
                                 // Comme la variable "ligne" est déclaré à 0 et non à 1 pour parcourir le tableau, on doit ici lui ajouter 1
-                                Console.WriteLine("Resultat equation n°" + (ligne + 1) + ", " + resultat);
-                                retourChariot();
+                                /*Console.WriteLine("Resultat equation n°" + (ligne + 1) + ", " + resultat);
+                                retourChariot();*/
                                 // On remet à zéro le compteur pour les contraintes
                                 compteurDecalageContraintes = 0;
                                 // Remettre a zéro sousContraintesTempo ?
@@ -290,7 +290,10 @@ namespace Main
                             tabValeurPrincipal[index - 1] = resultat;
                         }
                     }
-                    valeurZOpti = tabValeurPrincipal[index - 1];
+                    if(tabValeurPrincipal[index -1] != 0)
+                    {
+                        valeurZOpti = tabValeurPrincipal[index -1];
+                    }
                 }
 
                 //on calcule le nombre de variable dans le tableau
@@ -329,6 +332,32 @@ namespace Main
             {
                 Console.WriteLine("debug " + info + ", élément : " + i + ", " + tab[i]);
             }
+            Console.WriteLine("\n");
+        }
+
+        static void afficheEquationEchange(double[] tab, int numVarEntrante)
+        {
+            Console.WriteLine("\n");
+            string affiche = "équation d'échange : ";
+            for (int i = 0; i < tab.Length; i++)
+            {
+                if(i == 0)
+                {
+                    affiche += " x"+ (numVarEntrante+1) + " = ";
+                }
+                else
+                {
+                    if(i == tab.Length -1)
+                    {
+                        affiche += " + " + tab[i] ;
+                    }
+                    else
+                    {
+                        affiche += " + " + tab[i]+ "x";
+                    }
+                }
+            }
+            Console.WriteLine(affiche);
             Console.WriteLine("\n");
         }
 
