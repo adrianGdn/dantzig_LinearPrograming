@@ -86,8 +86,8 @@ namespace Main
             }
 
 
-            // Début du while (a faire)
-            // Condition d'arrêt : avoir tout les coefs négatifs
+            // Début du while 
+            // Condition d'arrêt : avoir tout les coefs de Z négatifs
 
             while (!stopIteration)
             {
@@ -108,7 +108,7 @@ namespace Main
                         }
                     }
                 }
-                else // cas itération suivante
+                else // cas itération > 0
                 {
                     for (int i = 0; i < nbValPrincipal - 1; i++) // on ne peut pas prendre le length du tableau, il n'est pas toujours valable
                     {
@@ -125,14 +125,6 @@ namespace Main
 
                 ////////////////////// On calcul la variable sortante //////////////////////
                 double variableSortante = 0;
-                /* if (counterIteration == 0)
-                   {
-                        variableSortante = tabSousContraintes[0, nbValPrincipal + 1] / tabSousContraintes[0, numeroVariableEntrante];
-                   }
-                   else
-                   {
-                        variableSortante = tabSousContraintes[0, nbValPrincipal ] / tabSousContraintes[0, numeroVariableEntrante];
-                   } */
                 int numeroEquationSelectionne = 0;
                 int counterNombreCoefs = 0;
                 for (int i = 0; i < tabSousContraintes.GetUpperBound(0) + 1; i++)
@@ -263,6 +255,7 @@ namespace Main
                 // calcul de Z (le maximum) de la fonction
                 double multiplicateurZ = tabValeurPrincipal[numeroVariableEntrante];
                 double valeurZOpti = 0;
+                int counterCoefNeg = 0;
                 for (int index = 1; index < equationEchange.Length; index++)
                 {
                     //@toDo : faire le cas pour itération < 0
@@ -281,9 +274,8 @@ namespace Main
                     else
                     {
                         if (numeroVariableEntrante == 0)
-                        { // la condition pour l'addition 
+                        {
                             tabValeurPrincipal[index - 1] = resultat + tabValeurPrincipal[index - 1];
-
                         }
                         else
                         {
@@ -293,6 +285,10 @@ namespace Main
                     if(tabValeurPrincipal[index -1] != 0)
                     {
                         valeurZOpti = tabValeurPrincipal[index -1];
+                    }
+                    if (tabValeurPrincipal[index - 1] < 0)
+                    {
+                        counterCoefNeg++;
                     }
                 }
 
@@ -312,7 +308,7 @@ namespace Main
                 Console.WriteLine("Z optimisée : " + valeurZOpti + " pour l\'itération N° " + counterIteration);
                 retourChariot();
 
-                if (valeurZOpti < 0)
+                if (counterCoefNeg <= nbValPrincipal -1)
                 {
                     stopIteration = true;
                 }
