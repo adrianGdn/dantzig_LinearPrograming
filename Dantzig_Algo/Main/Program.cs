@@ -154,9 +154,8 @@ namespace Main
                 // Création de l'équation d'échange
                 double[] equationEchange = new double[nbValPrincipal + 2];
 
-                // La variable sortante est au 1er rang du tableau
-                equationEchange[0] = numeroVariableEntrante;
-                //
+                
+                // cas 1e itération
                 if (counterIteration == 0)
                 {
                     for (int i = 1; i < nbValPrincipal + 2; i++)
@@ -190,6 +189,8 @@ namespace Main
                         }
                     }
                 }
+                // La variable sortante est au 1er rang du tableau
+                equationEchange[0] = 1;
 
                 afficheEquationEchange(equationEchange, numeroVariableEntrante);
 
@@ -219,17 +220,24 @@ namespace Main
                                     if (index == nbValEcart)
                                     {
                                         resultat = sousContraintesTempo[index] - resultat;
+                                        // On met à jour une partie d'une sous contrainte
+                                        tabSousContraintes[ligne, index] = resultat;
                                     }
                                     else
                                     {
                                         // On ne veut pas faire de calcul avec la nouvelle variable
-                                        if (index != nbValEcart - 1)
+                                        if (index == nbValEcart - 1)
+                                        {
+                                            // on ne fait rien 
+                                        }
+                                        else
                                         {
                                             resultat = resultat + sousContraintesTempo[index];
+                                            // On met à jour une partie d'une sous contrainte
+                                            tabSousContraintes[ligne, index] = resultat;
                                         }
                                     }
-                                    // On met à jour une partie d'une sous contrainte
-                                    tabSousContraintes[ligne, index] = resultat;
+                                    
                                 }
                                 // Comme la variable "ligne" est déclaré à 0 et non à 1 pour parcourir le tableau, on doit ici lui ajouter 1
                                 /*Console.WriteLine("Resultat equation n°" + (ligne + 1) + ", " + resultat);
@@ -250,8 +258,7 @@ namespace Main
                     tabSousContraintes[numeroEquationSelectionne, colonne] = equationEchange[colonne];
                 }
 
-
-                // TODO : Recalculer le nouveau Z --> c'est avec lui que tu vas avoir une nouvelle condition d'arrêt
+                
                 // calcul de Z (le maximum) de la fonction
                 double multiplicateurZ = tabValeurPrincipal[numeroVariableEntrante];
                 double valeurZOpti = 0;
@@ -308,7 +315,7 @@ namespace Main
                 Console.WriteLine("Z optimisée : " + valeurZOpti + " pour l\'itération N° " + counterIteration);
                 retourChariot();
 
-                if (counterCoefNeg <= nbValPrincipal -1)
+                if (counterCoefNeg >= nbValPrincipal -1)
                 {
                     stopIteration = true;
                 }
