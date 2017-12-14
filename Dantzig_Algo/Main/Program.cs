@@ -182,8 +182,9 @@ namespace Main
                 { // cas on itération > 0
                     for (int i = 1; i < nbValPrincipal + 1; i++)
                     {
+                        equationEchange[i] = tabSousContraintes[numeroEquationSelectionne, i] / tabSousContraintes[numeroEquationSelectionne, numeroVariableEntrante + 1];
                         // On traite le cas où on pourrais avoir des bugs avec des valeurs négatives
-                        if (i == 1 || i < nbValPrincipal + 1)
+                        /*if (i == 1 || i < nbValPrincipal + 1)
                         {
                             equationEchange[i] = tabSousContraintes[numeroEquationSelectionne, i] / tabSousContraintes[numeroEquationSelectionne, numeroVariableEntrante+1];
                         }
@@ -191,7 +192,7 @@ namespace Main
                         {
                             // On ne soustrait pas la constante
                             equationEchange[i] = tabSousContraintes[numeroEquationSelectionne, i] / tabSousContraintes[numeroEquationSelectionne, numeroVariableEntrante+1];
-                        }
+                        } */
                     }
                 }
                 // La variable sortante est au 1er rang du tableau
@@ -244,9 +245,6 @@ namespace Main
                                     }
                                     
                                 }
-                                // Comme la variable "ligne" est déclaré à 0 et non à 1 pour parcourir le tableau, on doit ici lui ajouter 1
-                                /*Console.WriteLine("Resultat equation n°" + (ligne + 1) + ", " + resultat);
-                                retourChariot();*/
                                 // On remet à zéro le compteur pour les contraintes
                                 compteurDecalageContraintes = 0;
                                 // Remettre a zéro sousContraintesTempo ?
@@ -263,20 +261,15 @@ namespace Main
                     tabSousContraintes[numeroEquationSelectionne, colonne] = equationEchange[colonne];
                 }
 
-                
+                afficheSousContraintes(tabSousContraintes, nbValEcart);
+
                 // calcul de Z (le maximum) de la fonction
                 double multiplicateurZ = tabValeurPrincipal[numeroVariableEntrante];
                 double valeurZOpti = 0;
                 int counterCoefNeg = 0;
                 for (int index = 1; index < equationEchange.Length; index++)
                 {
-                    //@toDo : faire le cas pour itération < 0
-                    /*
-                     * ok, la ca devient foireux. 
-                     * Ce tableau passe généralement de X variable à X +1 au premier passage (et peut encore augmenter plus tard)
-                     * Donc, au tout début il est initalisé avec deux "case" de marge de plus
-                     * C'est pour cela que l'on utilise pas sa taille 
-                     */
+                   
                     double resultat = multiplicateurZ * equationEchange[index];// ok
                     if (index == equationEchange.Length - 1)
                     {
@@ -362,6 +355,36 @@ namespace Main
                     else
                     {
                         affiche += " + " + tab[i]+ "x";
+                    }
+                }
+            }
+            Console.WriteLine(affiche);
+            Console.WriteLine("\n");
+        }
+
+        static void afficheSousContraintes(double[,] tab, int nbValEcart)
+        {
+            Console.WriteLine("\n");
+            string affiche = "";
+            for (int ligne = 0; ligne < tab.GetUpperBound(0); ligne++)
+            {
+                affiche = "sous équation : ";
+                for (int i = 1; i < nbValEcart + 1; i++)
+                {
+                    if (i == 0)
+                    {
+                        affiche += " x = ";
+                    }
+                    else
+                    {
+                        if (i == tab.Length - 1)
+                        {
+                            affiche += " + " + tab[ligne,i];
+                        }
+                        else
+                        {
+                            affiche += " + " + tab[ligne, i] + "x";
+                        }
                     }
                 }
             }
@@ -610,9 +633,7 @@ namespace Main
                                     }
 
                                 }
-                                // Comme la variable "ligne" est déclaré à 0 et non à 1 pour parcourir le tableau, on doit ici lui ajouter 1
-                                /*Console.WriteLine("Resultat equation n°" + (ligne + 1) + ", " + resultat);
-                                retourChariot();*/
+
                                 // On remet à zéro le compteur pour les contraintes
                                 compteurDecalageContraintes = 0;
                                 // Remettre a zéro sousContraintesTempo ?
@@ -628,7 +649,7 @@ namespace Main
                 {
                     tabSousContraintes[numeroEquationSelectionne, colonne] = equationEchange[colonne];
                 }
-
+                afficheSousContraintes(tabSousContraintes, nbValEcart);
 
                 // calcul de Z (le maximum) de la fonction
                 double multiplicateurZ = tabValeurPrincipal[numeroVariableEntrante];
@@ -636,13 +657,6 @@ namespace Main
                 int counterCoefNeg = 0;
                 for (int index = 1; index < equationEchange.Length; index++)
                 {
-                    //@toDo : faire le cas pour itération < 0
-                    /*
-                     * ok, la ca devient foireux. 
-                     * Ce tableau passe généralement de X variable à X +1 au premier passage (et peut encore augmenter plus tard)
-                     * Donc, au tout début il est initalisé avec deux "case" de marge de plus
-                     * C'est pour cela que l'on utilise pas sa taille 
-                     */
                     double resultat = multiplicateurZ * equationEchange[index];// ok
                     if (index == equationEchange.Length - 1)
                     {
