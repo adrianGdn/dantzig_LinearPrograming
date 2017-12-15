@@ -10,11 +10,11 @@ namespace Main
     {
         static void Main(string[] args)
         {
-            Bug();
+            //Bug();
 
             Console.WriteLine("Nombre de variables principales :");
             int nbValPrincipal = int.Parse(Console.ReadLine());
-            double[] tabValeurPrincipal = new double[nbValPrincipal + 2]; // +2 pour avoir de la marge car il va y avoir des rajouts plus tard
+            double[] tabValeurPrincipal = new double[nbValPrincipal + 1]; // +2 pour avoir de la marge car il va y avoir des rajouts plus tard
             // Pour affichage Z
             string valZ = "Z = ";
             ////////////////////// On récup valeur principales //////////////////////
@@ -41,13 +41,6 @@ namespace Main
             int counterIteration = 0;
             double[] VHB = new double[nbValPrincipal]; //la VHB
             double[] VDB = new double[nbValEcart]; // la VDB
-            //on remplis la VDB avec les variables d'écarts
-            int countVDB = 0;
-            for (int i = nbValPrincipal; i < nbValEcart; i++)
-            {
-                VHB[countVDB] = i;
-                countVDB++;
-            }
 
             //on remplis la VHB avec les variables principales
             int countVHB = 0;
@@ -56,6 +49,13 @@ namespace Main
                 VHB[countVHB] = i;
                 countVHB++;
             }
+
+            //on remplis la VDB avec les variables d'écarts
+            int countVDB = countVHB;
+            for (int i = 0; i <nbValEcart; i++)
+            {
+                VDB[i] = i + nbValPrincipal;
+            } 
 
             // Ici on fait "nbValPrincipal+2" car on stocke dans le tableau les variables principales + la variable d'écart + la constante
             double[,] tabSousContraintes = new double[nbValEcart, nbValPrincipal + 2];
@@ -183,16 +183,6 @@ namespace Main
                     for (int i = 1; i < nbValPrincipal + 1; i++)
                     {
                         equationEchange[i] = tabSousContraintes[numeroEquationSelectionne, i] / tabSousContraintes[numeroEquationSelectionne, numeroVariableEntrante + 1];
-                        // On traite le cas où on pourrais avoir des bugs avec des valeurs négatives
-                        /*if (i == 1 || i < nbValPrincipal + 1)
-                        {
-                            equationEchange[i] = tabSousContraintes[numeroEquationSelectionne, i] / tabSousContraintes[numeroEquationSelectionne, numeroVariableEntrante+1];
-                        }
-                        else
-                        {
-                            // On ne soustrait pas la constante
-                            equationEchange[i] = tabSousContraintes[numeroEquationSelectionne, i] / tabSousContraintes[numeroEquationSelectionne, numeroVariableEntrante+1];
-                        } */
                     }
                 }
                 // La variable sortante est au 1er rang du tableau
@@ -219,9 +209,9 @@ namespace Main
                             if (compteurDecalageContraintes == nbValEcart + 1)
                             {
                                 double resultat = 0;
-                                for (int index = 1; index < nbValEcart + 1; index++)
+                                for (int index = 0; index < nbValEcart; index++)
                                 {
-                                    resultat = sousContraintesTempo[numeroVariableEntrante] * equationEchange[index];
+                                    resultat = sousContraintesTempo[numeroVariableEntrante] * equationEchange[index + 1];
                                     // Cas de la constante
                                     if (index == nbValEcart)
                                     {
@@ -231,20 +221,26 @@ namespace Main
                                     }
                                     else
                                     {
-                                        // On ne veut pas faire de calcul avec la nouvelle variable
+                                        if (index == nbValEcart - 2)
+                                        {
+                                            resultat = resultat + sousContraintesTempo[index];
+                                            tabSousContraintes[ligne, index] = resultat;
+                                        }
                                         if (index == nbValEcart - 1)
                                         {
-                                            // on ne fait rien 
+                                            resultat = sousContraintesTempo[index + 1] - resultat;
+                                            tabSousContraintes[ligne, index + 1] = resultat;
                                         }
                                         else
                                         {
-                                            resultat = resultat + sousContraintesTempo[index];
+                                            //resultat = resultat + sousContraintesTempo[index];
                                             // On met à jour une partie d'une sous contrainte
                                             tabSousContraintes[ligne, index] = resultat;
                                         }
                                     }
-                                    
+
                                 }
+
                                 // On remet à zéro le compteur pour les contraintes
                                 compteurDecalageContraintes = 0;
                                 // Remettre a zéro sousContraintesTempo ?
@@ -278,13 +274,13 @@ namespace Main
                     }
                     else
                     {
-                        if (numeroVariableEntrante == 0)
+                        if (numeroVariableEntrante == 0 && counterIteration == 0)
                         {
-                            tabValeurPrincipal[index - 1] = resultat + tabValeurPrincipal[index - 1];
+                            tabValeurPrincipal[index - 1] = resultat + tabValeurPrincipal[index ];
                         }
                         else
                         {
-                            tabValeurPrincipal[index - 1] = resultat;
+                            tabValeurPrincipal[index - 1] = resultat + tabValeurPrincipal[index - 1];
                         }
                     }
                     if(tabValeurPrincipal[index -1] != 0)
@@ -297,15 +293,26 @@ namespace Main
                     }
                 }
 
-                //on calcule le nombre de variable dans le tableau
+                //on calcule et affiche le nombre de variable dans le tableau
+                string afficheVarPrincipal = " valeurs du tableau principal : ";
                 int counterTabValeurPrincipal = 0;
                 for (int index = 0; index < tabValeurPrincipal.Length; index++)
                 {
                     if (tabValeurPrincipal[index] != 0)
                     {
                         counterTabValeurPrincipal++;
+                        if(index == tabValeurPrincipal.Length -1 )
+                        {
+                            afficheVarPrincipal += " = " + tabValeurPrincipal[index];
+                        }
+                        else
+                        {
+                            afficheVarPrincipal += " , " + tabValeurPrincipal[index];
+                        }
                     }
                 }
+
+                Console.WriteLine(afficheVarPrincipal);
 
                 //on met à jour le nombre de nbValPrincipal
                 nbValPrincipal = counterTabValeurPrincipal;
@@ -313,7 +320,7 @@ namespace Main
                 Console.WriteLine("Z optimisée : " + valeurZOpti + " pour l\'itération N° " + counterIteration);
                 retourChariot();
 
-                if (counterCoefNeg >= nbValPrincipal -1)
+                if (counterCoefNeg >= nbValPrincipal -1 || counterIteration > 10)
                 {
                     stopIteration = true;
                 }
@@ -700,7 +707,7 @@ namespace Main
                 Console.WriteLine("Z optimisée : " + valeurZOpti + " pour l\'itération N° " + counterIteration);
                 retourChariot();
 
-                if (counterCoefNeg >= nbValPrincipal - 1)
+                if (counterCoefNeg >= nbValPrincipal - 1 || counterIteration > 10)
                 {
                     stopIteration = true;
                 }
